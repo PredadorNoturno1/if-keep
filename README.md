@@ -1,46 +1,50 @@
-# Getting Started with Create React App
+# 📌 IF Keep
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 🧾 Identificação do Projeto
 
-## Available Scripts
+**Nome:** IF Keep  
 
-In the project directory, you can run:
+**O que é:**  
+App de notas (estilo Google Keep) com foco em estudantes, permitindo organizar anotações por matérias e temas.
 
-### `npm start`
+**Diferencial:**  
+- Recuperação de conta via **Palavra-Secreta** (sem uso de e-mail)  
+- Interface temática **"Gamer"**
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+---
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## 🎨 Identidade Visual
 
-### `npm test`
+- **Cores principais:**
+  - Verde Esmeralda `#10b981`
+  - Laranja Âmbar `#f59e0b`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **Estilo:**
+  - Visual moderno  
+  - Suporte a **Dark Mode**  
+  - Inspirado em interfaces de jogos  
+  - Alta legibilidade  
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 👥 Organização da Equipe
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- **Alisson (Líder Fullstack):**
+  - Banco de Dados (**MySQL**)  
+  - API (**Node.js**)  
+  - Lógica do App (**React**)  
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- **Lucas (Colaborador / DevOps):**
+  - Configuração do ambiente (**Docker**)  
+  - Documentação (**README**)  
+  - Testes de bugs (**QA**)  
 
-### `npm run eject`
+---
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## 📅 Datas do Projeto
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- **Início:** Outubro de 2025  
+- **Versão Atual:** Março de 2026  
+  - Finalização do sistema de login e segurança  
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+---
