@@ -5,7 +5,7 @@ import axios from 'axios';
 
 const API_URL = 'http://localhost:3001';
 
-// --- ESTILOS ---
+// --- ESTILOS E TIPAGEM ---
 declare module 'styled-components' {
   export interface DefaultTheme {
     isDark: boolean; primary: string; bg: string; surface: string;
@@ -16,7 +16,7 @@ declare module 'styled-components' {
 
 const { 
   MdHome, MdSettings, MdDelete, MdArchive, MdUnarchive, MdAdd, MdClose,
-  MdPalette, MdDarkMode, MdLightMode, MdChevronRight, MdContentCopy
+  MdPalette, MdDarkMode, MdLightMode, MdChevronRight, MdContentCopy, MdLogout
 } = MdIcons as any;
 
 const GlobalStyle = createGlobalStyle`
@@ -25,60 +25,57 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const NOTE_COLORS = [
-  { name: 'Padrão', color: 'transparent' },
-  { name: 'Coral', color: '#f28b82' },
-  { name: 'Ouro', color: '#fbbc04' },
-  { name: 'Amarelo', color: '#fff475' },
-  { name: 'Verde', color: '#ccff90' },
-  { name: 'Azul', color: '#aecbfa' },
-  { name: 'Roxo', color: '#d7aefb' },
-  { name: 'Rosa', color: '#fdcfe8' },
+  { name: 'Padrão', color: 'transparent' }, { name: 'Coral', color: '#f28b82' }, { name: 'Ouro', color: '#fbbc04' },
+  { name: 'Amarelo', color: '#fff475' }, { name: 'Verde', color: '#ccff90' }, { name: 'Azul', color: '#aecbfa' },
+  { name: 'Roxo', color: '#d7aefb' }, { name: 'Rosa', color: '#fdcfe8' },
 ];
 
 const Layout = styled.div`display: flex; height: 100vh; overflow: hidden;`;
 const Sidebar = styled.div`width: 260px; background: ${p => p.theme.sidebarBg}; border-right: 1px solid ${p => p.theme.border}; display: flex; flex-direction: column; padding: 20px 0;`;
-const Logo = styled.div`font-size: 24px; font-weight: 800; padding: 0 24px 30px; cursor: pointer; display: flex; gap: 6px;`;
+const Logo = styled.div`font-size: 24px; font-weight: 800; padding: 0 24px 30px; cursor: pointer; display: flex; gap: 6px; justify-content: center;`;
 const NavItem = styled.div<{ active?: boolean }>`
   padding: 12px 24px; margin: 2px 12px; cursor: pointer; display: flex; align-items: center; gap: 12px; 
-  background: ${p => p.active ? p.theme.primary + '15' : 'transparent'}; 
-  color: ${p => p.active ? p.theme.primary : p.theme.textSecondary}; 
-  border-radius: 12px; font-weight: 600; transition: 0.2s;
-  &:hover { background: ${p => p.theme.hover}; }
+  background: ${p => p.active ? p.theme.primary + '15' : 'transparent'}; color: ${p => p.active ? p.theme.primary : p.theme.textSecondary}; 
+  border-radius: 12px; font-weight: 600; transition: 0.2s; &:hover { background: ${p => p.theme.hover}; }
 `;
 const Main = styled.div`flex: 1; padding: 40px; overflow-y: auto; display: flex; flex-direction: column; align-items: center;`;
 const SubjectCard = styled.div`
-  background: ${p => p.theme.surface}; border: 1px solid ${p => p.theme.border}; 
-  padding: 30px; border-radius: 20px; cursor: pointer; transition: 0.3s;
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  background: ${p => p.theme.surface}; border: 1px solid ${p => p.theme.border}; padding: 30px; border-radius: 20px; cursor: pointer; transition: 0.3s;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);
   &:hover { transform: translateY(-8px); box-shadow: 0 12px 20px rgba(0,0,0,0.1); border-color: ${p => p.theme.primary}; }
   h2 { margin: 0; font-size: 18px; text-align: center; }
 `;
 const NoteCard = styled.div<{ noteColor: string }>`
-  background: ${p => p.noteColor === 'transparent' ? p.theme.surface : p.noteColor}; 
-  color: ${p => p.noteColor === 'transparent' ? p.theme.text : '#202124'}; 
-  padding: 20px; border-radius: 16px; border: 1px solid ${p => p.theme.border}; 
-  display: flex; flex-direction: column; position: relative; transition: 0.2s;
+  background: ${p => p.noteColor === 'transparent' ? p.theme.surface : p.noteColor}; color: ${p => p.noteColor === 'transparent' ? p.theme.text : '#202124'}; 
+  padding: 20px; border-radius: 16px; border: 1px solid ${p => p.theme.border}; display: flex; flex-direction: column; position: relative; transition: 0.2s;
   &:hover { box-shadow: 0 6px 16px rgba(0,0,0,0.1); }
 `;
 const ColorMenu = styled.div`
-  position: absolute; bottom: 40px; right: 10px; background: ${p => p.theme.surface}; padding: 8px; 
-  border-radius: 12px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.2); z-index: 50; border: 1px solid ${p => p.theme.border};
+  position: absolute; bottom: 40px; right: 10px; background: ${p => p.theme.surface}; padding: 8px; border-radius: 12px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; box-shadow: 0 8px 16px rgba(0,0,0,0.2); z-index: 50; border: 1px solid ${p => p.theme.border};
 `;
 const ModalOverlay = styled.div`position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 20px;`;
 const Modal = styled.div`background: ${p => p.theme.surface}; padding: 30px; border-radius: 24px; width: 100%; max-width: 450px; border: 1px solid ${p => p.theme.border};`;
 
-interface Note { 
-  id: number; title: string; content: string; color: string; 
-  subject: string; archived: boolean; date: string; 
-  lastEdited?: string; 
-}
+const AuthContainer = styled.div`height: 100vh; display: flex; align-items: center; justify-content: center; background: ${p => p.theme.bg};`;
+const AuthCard = styled(Modal)`text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.1);`;
+const AuthInput = styled.input`width: 100%; padding: 14px; margin-bottom: 15px; border-radius: 12px; border: 2px solid ${p => p.theme.border}; background: ${p => p.theme.bg}; color: ${p => p.theme.text}; outline: none; font-size: 15px; &:focus { border-color: ${p => p.theme.primary}; }`;
+const AuthButton = styled.button`width: 100%; padding: 14px; background: ${p => p.theme.primary}; color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.2s; &:hover { opacity: 0.9; transform: scale(0.98); }`;
+
+interface Note { id: number; title: string; content: string; color: string; subject: string; archived: boolean; date: string; lastEdited?: string; }
 
 export default function App() {
   const [isDark, setIsDark] = useState(false);
   const primary = '#10b981';
+
+  // --- ESTADOS DE AUTENTICAÇÃO E RECUPERAÇÃO ---
+  const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
+  const [username, setUsername] = useState<string | null>(localStorage.getItem('username'));
   
+  // Modos possíveis: 'login', 'register', 'reset'
+  const [authMode, setAuthMode] = useState<'login'|'register'|'reset'>('login');
+  const [authForm, setAuthForm] = useState({ username: '', email: '', password: '', secret_word: '', newPassword: '' });
+  
+  // --- ESTADOS DO APP ---
   const [subjects, setSubjects] = useState<string[]>([]);
   const [activeSub, setActiveSub] = useState<string | null>(null);
   const [notes, setNotes] = useState<Note[]>([]);
@@ -91,124 +88,174 @@ export default function App() {
   const [editingNote, setEditingNote] = useState<Note | null>(null); 
 
   const theme: DefaultTheme = {
-    isDark, primary,
-    bg: isDark ? '#0f172a' : '#f8fafc',
-    sidebarBg: isDark ? '#1e293b' : '#ffffff',
-    surface: isDark ? '#1e293b' : '#ffffff',
-    text: isDark ? '#f1f5f9' : '#1e293b',
-    textSecondary: isDark ? '#94a3b8' : '#64748b',
-    border: isDark ? '#334155' : '#e2e8f0',
-    hover: isDark ? '#334155' : '#f1f5f9',
+    isDark, primary, bg: isDark ? '#0f172a' : '#f8fafc', sidebarBg: isDark ? '#1e293b' : '#ffffff',
+    surface: isDark ? '#1e293b' : '#ffffff', text: isDark ? '#f1f5f9' : '#1e293b',
+    textSecondary: isDark ? '#94a3b8' : '#64748b', border: isDark ? '#334155' : '#e2e8f0', hover: isDark ? '#334155' : '#f1f5f9',
   };
 
   const getTime = () => new Date().toLocaleString('pt-BR', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' });
 
-  // --- LÓGICA DE BACKEND ---
+  const api = axios.create({ baseURL: API_URL, headers: { Authorization: `Bearer ${token}` } });
 
-  useEffect(() => { fetchData(); }, []);
+  useEffect(() => { if (token) fetchData(); }, [token]);
 
   const fetchData = async () => {
     try {
-      const resSub = await axios.get(`${API_URL}/subjects`);
-      setSubjects(resSub.data);
-      const resNotes = await axios.get(`${API_URL}/notes`);
-      setNotes(resNotes.data);
-    } catch (err) { console.error("Erro ao carregar dados:", err); }
+      const [resSub, resNotes] = await Promise.all([ api.get('/subjects'), api.get('/notes') ]);
+      setSubjects(resSub.data); setNotes(resNotes.data);
+    } catch (err) { console.error("Erro ao carregar dados", err); }
   };
 
-  const handleAddSubject = async () => {
-    if (newSubName && !subjects.includes(newSubName)) {
-      try {
-        await axios.post(`${API_URL}/subjects`, { name: newSubName });
-        setNewSubName(''); setShowSubModal(false);
-        fetchData(); // Recarrega para garantir sincronia
-      } catch (err) { alert("Erro ao salvar matéria."); }
-    }
-  };
-
-  const handleSaveNote = async () => {
-    const tInput = document.getElementById('noteTitle') as HTMLInputElement;
-    const cInput = document.getElementById('noteContent') as HTMLTextAreaElement;
-    
-    if (tInput.value || cInput.value) {
-      const novaNota = {
-        title: tInput.value, content: cInput.value, color: 'transparent',
-        subject: activeSub || 'Geral', archived: false, date: getTime()
-      };
-      try {
-        await axios.post(`${API_URL}/notes`, novaNota);
-        fetchData();
-        tInput.value = ''; cInput.value = '';
-      } catch (err) { alert("Erro ao salvar nota."); }
-    }
-  };
-
-  const handleUpdateNote = async (id: number, fields: Partial<Note>) => {
+  // --- FUNÇÕES DE AUTH ---
+  const handleLoginRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
     try {
-      await axios.put(`${API_URL}/notes/${id}`, fields);
-      fetchData(); // Sincroniza após update
-    } catch (err) {
-      setNotes(notes.map(n => n.id === id ? { ...n, ...fields } : n));
-    }
-  };
-
-  const handleDuplicateNote = async (note: Note) => {
-    const duplicated = { ...note, id: undefined, title: `${note.title} (Cópia)`, date: getTime() };
-    try {
-      await axios.post(`${API_URL}/notes`, duplicated);
-      fetchData();
-    } catch (err) { alert("Erro ao duplicar nota."); }
-  };
-
-  const confirmDelete = async () => {
-    if (!deleteTarget) return;
-    try {
-      if (deleteTarget.type === 'note') {
-        await axios.delete(`${API_URL}/notes/${deleteTarget.id}`);
+      const endpoint = authMode === 'register' ? '/register' : '/login';
+      const res = await axios.post(`${API_URL}${endpoint}`, authForm);
+      if (authMode === 'register') {
+        alert("Conta criada! Faça login agora.");
+        setAuthMode('login');
       } else {
-        await axios.delete(`${API_URL}/subjects/${deleteTarget.id}`);
-        if(activeSub === deleteTarget.id) setActiveSub(null);
+        localStorage.setItem('token', res.data.token);
+        localStorage.setItem('username', res.data.username);
+        setToken(res.data.token); setUsername(res.data.username);
       }
-      setDeleteTarget(null);
-      fetchData(); // ESSA LINHA RESOLVE O PROBLEMA DAS MATÉRIAS VOLTAREM
-    } catch (err) {
-       console.error("Erro na exclusão");
-       setDeleteTarget(null);
-    }
+    } catch (err: any) { alert(err.response?.data?.error || "Erro de conexão."); }
   };
 
-  const hasArchivedNotes = notes.some(n => n.subject === activeSub && n.archived);
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await axios.post(`${API_URL}/reset-password`, authForm);
+      alert("Senha atualizada com sucesso! Você já pode fazer login.");
+      setAuthMode('login');
+    } catch (err: any) { alert(err.response?.data?.error || "Erro ao redefinir a senha."); }
+  };
+
+  const handleLogout = () => { localStorage.clear(); setToken(null); setUsername(null); };
+
+  // --- FUNÇÕES DE ROTINA DO APP AQUI ---
+  const handleAddSubject = async () => { 
+    if (newSubName && !subjects.includes(newSubName)) { 
+      try { 
+        await api.post(`/subjects`, { name: newSubName }); 
+        setNewSubName(''); 
+        setShowSubModal(false); 
+        fetchData(); 
+      } catch (err: any) { 
+        alert(err.response?.data?.error || "Erro ao salvar matéria no banco."); 
+      } 
+    } 
+  };
+  
+  const handleSaveNote = async () => { 
+    const tInput = document.getElementById('noteTitle') as HTMLInputElement; 
+    const cInput = document.getElementById('noteContent') as HTMLTextAreaElement; 
+    if (tInput.value || cInput.value) { 
+      try { 
+        await api.post(`/notes`, { title: tInput.value, content: cInput.value, color: 'transparent', subject: activeSub || 'Geral', archived: false, date: getTime() }); 
+        fetchData(); 
+        tInput.value = ''; cInput.value = ''; 
+      } catch (err: any) { 
+        alert(err.response?.data?.error || "Erro ao salvar a nota."); 
+      } 
+    } 
+  };
+  
+  const handleUpdateNote = async (id: number, fields: Partial<Note>) => { try { await api.put(`/notes/${id}`, fields); fetchData(); } catch (err) {} };
+  const handleDuplicateNote = async (note: Note) => { const { id, ...noteData } = note; try { await api.post(`/notes`, { ...noteData, title: `${note.title} (Cópia)`, date: getTime() }); fetchData(); } catch (err) {} };
+  const confirmDelete = async () => { if (!deleteTarget) return; try { if (deleteTarget.type === 'note') { await api.delete(`/notes/${deleteTarget.id}`); } else { await api.delete(`/subjects/${deleteTarget.id}`); if(activeSub === deleteTarget.id) setActiveSub(null); } setDeleteTarget(null); fetchData(); } catch (err) {} };
+
   const filteredNotes = notes.filter(n => n.subject === activeSub && (view === 'active' ? !n.archived : n.archived));
 
+  // --- RENDERIZAÇÃO DAS TELAS DE AUTH ---
+  if (!token) {
+    return (
+      <ThemeProvider theme={theme}>
+        <GlobalStyle />
+        <AuthContainer>
+          <AuthCard>
+            <Logo style={{marginBottom: 10}}><span style={{ color: '#10b981' }}>IF</span> <span style={{ color: '#f59e0b' }}>Keep</span></Logo>
+            
+            {/* TELA DE LOGIN OU REGISTRO */}
+            {(authMode === 'login' || authMode === 'register') && (
+              <>
+                <h2 style={{marginBottom: 25}}>{authMode === 'register' ? 'Crie sua conta' : 'Acesse suas notas'}</h2>
+                <form onSubmit={handleLoginRegister}>
+                  {authMode === 'register' && <AuthInput placeholder="Nome de usuário" required onChange={e => setAuthForm({...authForm, username: e.target.value})} />}
+                  
+                  <AuthInput type="email" placeholder="E-mail" required onChange={e => setAuthForm({...authForm, email: e.target.value})} />
+                  <AuthInput type="password" placeholder="Senha" required onChange={e => setAuthForm({...authForm, password: e.target.value})} />
+                  
+                  {authMode === 'register' && (
+                    <AuthInput type="text" placeholder="Crie uma Palavra-Secreta (Para recuperar senha)" required onChange={e => setAuthForm({...authForm, secret_word: e.target.value})} />
+                  )}
+                  
+                  <AuthButton type="submit">{authMode === 'register' ? 'Cadastrar' : 'Entrar'}</AuthButton>
+                </form>
+                
+                <div style={{marginTop: 20, fontSize: 14, color: theme.textSecondary, display: 'flex', flexDirection: 'column', gap: 10}}>
+                  <span style={{cursor: 'pointer'}} onClick={() => setAuthMode(authMode === 'login' ? 'register' : 'login')}>
+                    {authMode === 'register' ? 'Já tem conta? Faça Login' : 'Não tem conta? Cadastre-se'}
+                  </span>
+                  {authMode === 'login' && (
+                    <span style={{cursor: 'pointer', color: primary, fontWeight: 'bold'}} onClick={() => setAuthMode('reset')}>
+                      Esqueceu sua senha?
+                    </span>
+                  )}
+                </div>
+              </>
+            )}
+
+            {/* TELA DE RECUPERAR SENHA (DIRETO COM PIN) */}
+            {authMode === 'reset' && (
+              <>
+                <h2 style={{marginBottom: 10}}>Recuperar Senha</h2>
+                <p style={{color: theme.textSecondary, marginBottom: 20, fontSize: 14}}>Digite seu e-mail e a Palavra-Secreta criada no cadastro.</p>
+                <form onSubmit={handleResetPassword}>
+                  <AuthInput type="email" placeholder="Seu E-mail" required onChange={e => setAuthForm({...authForm, email: e.target.value})} />
+                  <AuthInput type="text" placeholder="Sua Palavra-Secreta" required onChange={e => setAuthForm({...authForm, secret_word: e.target.value})} />
+                  <AuthInput type="password" placeholder="Sua Nova Senha" required onChange={e => setAuthForm({...authForm, newPassword: e.target.value})} />
+                  <AuthButton type="submit">Atualizar Senha</AuthButton>
+                </form>
+                <p style={{marginTop: 20, fontSize: 14, color: theme.textSecondary, cursor: 'pointer', fontWeight: 'bold'}} onClick={() => setAuthMode('login')}>
+                  Voltar para o Login
+                </p>
+              </>
+            )}
+
+          </AuthCard>
+        </AuthContainer>
+      </ThemeProvider>
+    );
+  }
+
+  // --- RENDERIZAÇÃO APP PRINCIPAL ---
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
       <Layout>
         <Sidebar>
-          <Logo onClick={() => setActiveSub(null)}>
-            <span style={{ color: '#10b981' }}>IF</span> 
-            <span style={{ color: '#f59e0b' }}>Keep</span>
-          </Logo>
-          
+          <Logo onClick={() => setActiveSub(null)}><span style={{ color: '#10b981' }}>IF</span> <span style={{ color: '#f59e0b' }}>Keep</span></Logo>
           <NavItem active={activeSub === null} onClick={() => setActiveSub(null)}><MdHome size={22}/> Início</NavItem>
-          
-          <div style={{padding: '25px 24px 10px', fontSize: 11, fontWeight: 'bold', color: theme.textSecondary, display: 'flex', justifyContent: 'space-between'}}>
-            MINHAS MATÉRIAS <MdAdd size={20} cursor="pointer" onClick={() => setShowSubModal(true)}/>
-          </div>
+          <div style={{padding: '25px 24px 10px', fontSize: 11, fontWeight: 'bold', color: theme.textSecondary, display: 'flex', justifyContent: 'space-between'}}>MINHAS MATÉRIAS <MdAdd size={20} cursor="pointer" onClick={() => setShowSubModal(true)}/></div>
           {subjects.map(s => (
             <NavItem key={s} active={activeSub === s} onClick={() => {setActiveSub(s); setView('active');}}>
               <div style={{flex: 1, overflow: 'hidden', textOverflow: 'ellipsis'}}>{s}</div>
               <MdDelete size={16} onClick={(e: any) => { e.stopPropagation(); setDeleteTarget({type: 'subject', id: s}); }}/>
             </NavItem>
           ))}
-          <NavItem onClick={() => setShowSettings(true)} style={{marginTop: 'auto'}}><MdSettings size={22}/> Configurações</NavItem>
+          <div style={{marginTop: 'auto'}}>
+            <NavItem onClick={() => setShowSettings(true)}><MdSettings size={22}/> Configurações</NavItem>
+            <NavItem onClick={handleLogout} style={{color: '#ef4444'}}><MdLogout size={22}/> Sair</NavItem>
+          </div>
         </Sidebar>
 
         <Main>
           {!activeSub ? (
             <div style={{width: '100%', maxWidth: 1000}}>
-              <h1>Bem-vindo ao IF Keep! 👋</h1>
-              <p style={{color: theme.textSecondary, marginBottom: 40}}>Selecione uma matéria ou crie uma nova para começar.</p>
+              <h1>Olá, {username}! 👋</h1>
+              <p style={{color: theme.textSecondary, marginBottom: 40}}>Suas anotações estão seguras aqui.</p>
               <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 25}}>
                 {subjects.map(s => (
                   <SubjectCard key={s} onClick={() => setActiveSub(s)}>
@@ -218,8 +265,7 @@ export default function App() {
                   </SubjectCard>
                 ))}
                 <SubjectCard style={{borderStyle: 'dashed', background: 'transparent'}} onClick={() => setShowSubModal(true)}>
-                  <MdAdd size={40} color={theme.border}/>
-                  <h2>Nova Matéria</h2>
+                  <MdAdd size={40} color={theme.border}/><h2>Nova Matéria</h2>
                 </SubjectCard>
               </div>
             </div>
@@ -276,6 +322,7 @@ export default function App() {
           )}
         </Main>
 
+        {/* --- MODAIS MANTIDOS --- */}
         {deleteTarget && (
           <ModalOverlay><Modal>
             <h3 style={{marginTop:0}}>Confirmar Exclusão?</h3>
